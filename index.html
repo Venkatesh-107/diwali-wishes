@@ -1,0 +1,1683 @@
+<!doctype html>
+<html lang="en" data-theme="retro-90s">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#008080" />
+    <meta
+      name="description"
+      content="A Diwali wish with a trick riddle, two festival games, and a personalized scorecard."
+    />
+    <title>Diwali Wishes — Festival Games</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"
+        }
+      }
+    </script>
+    <style>
+      :root {
+        color-scheme: light;
+        --teal: #008080;
+        --silver: #c0c0c0;
+        --light-silver: #dfdfdf;
+        --navy: #000080;
+        --gold: #ffcf52;
+        font-family: Tahoma, "MS Sans Serif", Arial, sans-serif;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+      }
+
+      * { box-sizing: border-box; }
+      [hidden] { display: none !important; }
+      html, body { width: 100%; min-width: 320px; height: 100%; min-height: 100%; margin: 0; overflow: hidden; background: var(--teal); }
+      body { color: #000; }
+      button, input { font: inherit; }
+      button:focus-visible, input:focus-visible { outline: 2px dotted #000080; outline-offset: 3px; }
+
+      .desktop {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        height: 100svh;
+        min-height: 520px;
+        overflow: hidden;
+        isolation: isolate;
+        background:
+          repeating-linear-gradient(135deg, rgba(255,255,255,.025) 0 2px, transparent 2px 6px),
+          radial-gradient(ellipse at 50% 62%, rgba(255,196,96,.18), transparent 35%),
+          var(--teal);
+      }
+
+      #world {
+        position: absolute;
+        z-index: -2;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .world-fallback {
+        position: absolute;
+        z-index: -2;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .rangoli {
+        position: absolute;
+        bottom: -34%;
+        left: 50%;
+        width: min(105vw, 1020px);
+        aspect-ratio: 1;
+        border: 2px solid rgba(255, 227, 155, .4);
+        border-radius: 50%;
+        background:
+          radial-gradient(ellipse at 50% 50%, rgba(255,185,69,.28), transparent 12%),
+          repeating-radial-gradient(ellipse at center, transparent 0 38px, rgba(255,239,188,.3) 39px 40px, transparent 41px 70px);
+        box-shadow: 0 0 75px rgba(0,0,128,.22), inset 0 0 55px rgba(255,197,97,.16);
+        transform: translateX(-50%) perspective(650px) rotateX(67deg);
+      }
+
+      .fallback-diya {
+        position: absolute;
+        bottom: 17%;
+        left: 50%;
+        width: 82px;
+        height: 78px;
+        filter: drop-shadow(0 0 18px rgba(255,185,78,.95));
+        transform: translateX(-50%);
+        animation: diya-bob 2.4s ease-in-out infinite;
+      }
+
+      .desktop-header {
+        position: absolute;
+        z-index: 4;
+        top: max(14px, env(safe-area-inset-top));
+        left: 12px;
+        right: 12px;
+        display: flex;
+        height: clamp(56px, 10vh, 82px);
+        align-items: center;
+        justify-content: center;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        color: #fff;
+        font-family: "Space Grotesk", Tahoma, sans-serif;
+        font-size: clamp(32px, 7vw, 64px);
+        font-weight: 700;
+        letter-spacing: .035em;
+        line-height: 1;
+        text-shadow: 3px 3px 0 var(--navy), 0 0 18px rgba(255,215,132,.72);
+      }
+
+      .dialog-stage {
+        position: absolute;
+        z-index: 6;
+        inset: 0;
+        display: grid;
+        place-items: start center;
+        padding: 282px 18px 50px;
+        background: rgba(0,32,45,.11);
+      }
+
+      .window {
+        position: relative;
+        width: min(440px, 100%);
+        padding: 38px 28px 18px;
+        overflow: hidden;
+        text-align: center;
+        border: 2px solid;
+        border-color: #fff #404040 #404040 #fff;
+        background: var(--silver);
+        box-shadow: inset -1px -1px #000, inset 1px 1px var(--light-silver), 4px 4px 0 rgba(0,0,0,.32);
+      }
+
+      .titlebar {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        left: 3px;
+        display: flex;
+        height: 23px;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 8px;
+        color: #fff;
+        border: 1px solid;
+        border-color: #7f9db9 var(--navy) var(--navy) #7f9db9;
+        background: linear-gradient(90deg, var(--navy), #1084d0);
+        font-size: 11px;
+        font-weight: 700;
+        text-align: left;
+      }
+
+      .window-close {
+        display: grid;
+        width: 17px;
+        height: 17px;
+        margin-right: 3px;
+        place-items: center;
+        color: #000;
+        border: 1px solid;
+        border-color: #fff #404040 #404040 #fff;
+        background: var(--silver);
+        font: 700 14px Arial, sans-serif;
+        line-height: 1;
+      }
+
+      .stage-icon {
+        display: grid;
+        width: 44px;
+        height: 44px;
+        margin: 0 auto 8px;
+        place-items: center;
+        border: 2px solid;
+        border-color: #fff #808080 #808080 #fff;
+        background: var(--light-silver);
+        box-shadow: inset -1px -1px #000, inset 1px 1px #fff;
+        font-size: 24px;
+      }
+      .stage-icon svg, .rangoli-center svg, .footer-mark svg { width: 26px; height: 26px; }
+      .stage-icon svg { stroke: var(--navy); }
+      .rangoli-center svg { width: 28px; height: 28px; }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--navy);
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: .16em;
+      }
+
+      h1, h2 {
+        margin: 0;
+        color: var(--navy);
+        font-size: clamp(25px, 5vw, 32px);
+        font-weight: 700;
+        letter-spacing: -.04em;
+      }
+
+      h1 em, h2 em { color: #800000; font-style: normal; }
+      .copy { max-width: 330px; margin: 8px auto 12px; color: #222; font-size: 11px; line-height: 1.65; }
+
+      .field-label, fieldset legend {
+        display: block;
+        margin: 0 0 7px;
+        color: #222;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: .11em;
+        text-align: left;
+      }
+
+      .text-field {
+        width: 100%;
+        min-height: 42px;
+        padding: 0 11px;
+        color: #000;
+        border: 2px solid;
+        border-color: #808080 #fff #fff #808080;
+        border-radius: 0;
+        outline: 0;
+        background: #fff;
+        box-shadow: inset 1px 1px #000, inset -1px -1px var(--light-silver);
+        font-size: 12px;
+      }
+
+      .text-field:focus { border-color: var(--navy); }
+      .text-field::placeholder { color: #666; }
+
+      fieldset { min-width: 0; margin: 9px 0 12px; padding: 0; border: 0; }
+      .gender-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .gender-option { position: relative; cursor: pointer; }
+      .gender-option input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+      .gender-option span {
+        display: flex;
+        min-height: calc(38px + env(safe-area-inset-bottom, 0px));
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid;
+        border-color: #fff #808080 #808080 #fff;
+        background: var(--silver);
+        box-shadow: inset -1px -1px #000, inset 1px 1px var(--light-silver);
+        font-size: 11px;
+      }
+      .gender-option input:checked + span {
+        color: var(--navy);
+        border-color: #808080 #fff #fff #808080;
+        background: var(--light-silver);
+        box-shadow: inset 1px 1px #000, inset -1px -1px #fff;
+      }
+      .gender-option input:focus-visible + span { outline: 2px dotted var(--navy); outline-offset: 2px; }
+
+      .retro-button {
+        display: inline-flex;
+        width: 100%;
+        min-height: 42px;
+        gap: 12px;
+        align-items: center;
+        justify-content: center;
+        padding: 0 12px;
+        color: #000;
+        border: 2px solid;
+        border-color: #fff #404040 #404040 #fff;
+        border-radius: 0;
+        background: var(--silver);
+        box-shadow: inset -1px -1px #000, inset 1px 1px var(--light-silver), inset -2px -2px #808080, inset 2px 2px #fff;
+        cursor: pointer;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: .06em;
+      }
+      .retro-button:hover { background: #d4d0c8; }
+      .retro-button:active {
+        border-color: #808080 #fff #fff #808080;
+        box-shadow: inset 1px 1px #000, inset -1px -1px var(--light-silver), inset 2px 2px #808080, inset -2px -2px #fff;
+        transform: translate(1px,1px);
+      }
+      .retro-button:disabled { color: #777; cursor: default; }
+
+      .riddle-form { display: grid; gap: 7px; text-align: left; }
+      .answer-row { display: grid; grid-template-columns: minmax(0,1fr) 84px; gap: 8px; }
+      .answer-row .retro-button { min-height: 42px; }
+      .attempts { display: flex; gap: 7px; justify-content: center; margin: 0 0 15px; }
+      .attempts i { width: 21px; height: 5px; border: 1px solid #808080; background: var(--navy); }
+      .attempts i.used { background: #808080; opacity: .55; }
+      .status { min-height: 29px; margin: 10px 0 0; color: #333; font-size: 10px; line-height: 1.5; }
+      .status.error { color: #800000; }
+      .status.success { color: #005500; }
+      .attempt-label { margin: 5px 0 0; color: var(--navy); font-size: 8px; }
+      .hint-box { margin-top: 8px; padding: 10px; border: 2px solid; border-color: #fff #808080 #808080 #fff; background: var(--light-silver); }
+      .hint-box p { margin: 0 0 9px; color: #222; font-size: 10px; line-height: 1.5; }
+      .hint-actions { display: flex; gap: 8px; }
+      .hint-actions .retro-button { min-height: 31px; font-size: 8px; }
+      .hint-actions .retro-button:last-child { width: 100px; }
+      .game-window { width: min(790px, 100%); padding-inline: 21px; }
+      .game-heading { display: flex; align-items: end; justify-content: space-between; gap: 14px; margin-bottom: 10px; text-align: left; }
+      .game-heading h2 { font-size: clamp(20px, 4vw, 27px); }
+      .game-heading .eyebrow { margin-bottom: 5px; }
+      .game-instructions { margin: 4px 0 0; color: #333; font-size: 9px; line-height: 1.5; }
+      .game-hud { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 7px; }
+      .hud-chip { min-width: 76px; padding: 6px 9px; border: 2px solid; border-color: #808080 #fff #fff #808080; background: var(--light-silver); color: var(--navy); font-size: 8px; font-weight: 700; letter-spacing: .06em; text-align: center; }
+      .hud-chip span { color: #800000; }
+      #game-canvas { display: block; width: 100%; height: clamp(150px, 24svh, 230px); border: 2px solid; border-color: #404040 #fff #fff #404040; background: #071d46; touch-action: none; }
+      .game-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; }
+      .move-controls { display: flex; gap: 7px; }
+      .move-button { width: 58px; min-height: 38px; padding: 0; font-size: 15px; touch-action: none; user-select: none; }
+      .game-help { margin: 0; color: #333; font-size: 8px; }
+      .game-action { width: min(210px, 48%); min-height: 38px; }
+      .game-feedback { min-height: 18px; margin: 6px 0 0; color: var(--navy); font-size: 9px; }
+      .memory-window { width: min(520px, 100%); }
+      .rangoli-copy { margin: 7px auto 10px; color: #333; font-size: 10px; line-height: 1.5; }
+      .rangoli-board {
+        position: relative;
+        width: min(180px, 50vw, 25svh);
+        aspect-ratio: 1;
+        margin: 9px auto 5px;
+        border: 2px solid;
+        border-color: #808080 #fff #fff #808080;
+        background:
+          repeating-conic-gradient(from 15deg, rgba(0,0,128,.07) 0deg 15deg, transparent 15deg 30deg),
+          radial-gradient(circle, #dfdfdf 0 27%, #c0c0c0 28% 100%);
+        box-shadow: inset 1px 1px #000, inset -1px -1px #fff;
+      }
+      .rangoli-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        display: grid;
+        width: 52px;
+        height: 52px;
+        place-items: center;
+        border: 2px solid;
+        border-color: #fff #808080 #808080 #fff;
+        background: #c0c0c0;
+        box-shadow: inset -1px -1px #000, inset 1px 1px #fff;
+        font-size: 25px;
+        transform: translate(-50%, -50%);
+      }
+      .rangoli-petal {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 57px;
+        height: 57px;
+        padding: 0;
+        border: 3px solid;
+        border-color: #fff #5b3545 #5b3545 #fff;
+        border-radius: 50% 50% 14% 50%;
+        box-shadow: inset -2px -2px rgba(0,0,0,.24), inset 2px 2px rgba(255,255,255,.55), 2px 2px 0 rgba(0,0,0,.25);
+        cursor: pointer;
+        opacity: .9;
+        transform: translate(-50%, -50%) rotate(45deg);
+        transition: filter .12s, transform .12s, box-shadow .12s;
+      }
+      .rangoli-petal:hover { filter: brightness(1.15); }
+      .rangoli-petal:disabled { opacity: 1; cursor: default; }
+      .rangoli-petal.is-lit {
+        z-index: 1;
+        filter: brightness(1.55);
+        box-shadow: 0 0 0 3px #fff, 0 0 19px 8px rgba(255,255,255,.82);
+        transform: translate(-50%, -50%) rotate(45deg) scale(1.17);
+      }
+      .rangoli-petal.is-wrong {
+        filter: grayscale(1) brightness(.6);
+      }
+      .rangoli-status { min-height: 19px; margin: 5px 0 0; color: var(--navy); font-size: 9px; font-weight: 700; }
+
+      .scorecard {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 7px 10px;
+        align-items: center;
+        margin: 0 0 13px;
+        padding: 11px;
+        text-align: left;
+        border: 2px solid;
+        border-color: #808080 #fff #fff #808080;
+        background: var(--light-silver);
+      }
+      .scorecard-top, .scorecard-bottom { grid-column: 1 / -1; color: #333; font-size: 7px; font-weight: 700; letter-spacing: .12em; }
+      .scorecard-name { overflow: hidden; color: var(--navy); font-size: 13px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+      .scorecard-points { color: var(--navy); font-size: 19px; font-weight: 700; }
+      .scorecard-points small { color: #333; font-size: 7px; }
+      .result-window > :not(.result-fireworks):not(.titlebar) { position: relative; z-index: 1; }
+      .result-window .titlebar { z-index: 2; }
+      .result-fireworks {
+        position: absolute;
+        z-index: 0;
+        inset: 27px 0 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .firework-burst {
+        position: absolute;
+        width: 76px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: repeating-conic-gradient(from 2deg, #ffd36a 0 4deg, transparent 4deg 26deg);
+        filter: drop-shadow(0 0 5px rgba(255,195,77,.85));
+        mask: radial-gradient(circle, transparent 0 13%, #000 18% 49%, transparent 54%);
+        animation: firework-bloom 2.8s ease-out infinite;
+      }
+      .firework-burst::after {
+        position: absolute;
+        inset: 43%;
+        border-radius: 50%;
+        background: #fff3ae;
+        box-shadow: 0 0 13px 5px #ffcf52;
+        content: "";
+      }
+      .firework-burst-one { top: 7%; left: 5%; }
+      .firework-burst-two { top: 18%; right: 4%; animation-delay: .9s; filter: hue-rotate(95deg) drop-shadow(0 0 5px rgba(255,195,77,.85)); }
+      .firework-burst-three { right: 16%; bottom: 6%; width: 58px; animation-delay: 1.7s; filter: hue-rotate(190deg) drop-shadow(0 0 5px rgba(255,195,77,.85)); }
+      .scorecard-lights {
+        display: flex;
+        grid-column: 1 / -1;
+        justify-content: space-around;
+        padding: 3px 4px 8px;
+        border-top: 1px solid rgba(0,0,128,.25);
+        border-bottom: 1px solid rgba(0,0,128,.25);
+      }
+      .scorecard-lights i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ffcc57;
+        box-shadow: 0 0 5px 2px rgba(255,191,74,.7);
+        animation: light-twinkle 1.3s ease-in-out infinite alternate;
+      }
+      .scorecard-lights i:nth-child(3n + 2) { background: #ff765e; box-shadow: 0 0 5px 2px rgba(255,118,94,.6); animation-delay: .45s; }
+      .scorecard-lights i:nth-child(3n) { background: #fff; box-shadow: 0 0 5px 2px rgba(255,255,255,.75); animation-delay: .9s; }
+      .share-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+      .share-actions .retro-button { gap: 8px; }
+      .share-actions svg { width: 15px; height: 15px; flex: 0 0 auto; }
+      .share-status { min-height: 20px; margin: 7px 0 0; color: #333; font-size: 9px; line-height: 1.4; }
+      .share-status.error { color: #800000; }
+      @keyframes firework-bloom { 0%, 100% { opacity: .48; transform: scale(.65) rotate(0); } 50% { opacity: 1; transform: scale(1.05) rotate(12deg); } }
+      @keyframes light-twinkle { from { opacity: .45; transform: scale(.75); } to { opacity: 1; transform: scale(1.15); } }
+
+      .desktop-footer {
+        position: absolute;
+        z-index: 4;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        min-height: 38px;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 10px calc(5px + env(safe-area-inset-bottom, 0px));
+        border-top: 2px solid;
+        border-color: #fff #808080 #808080 #fff;
+        background: var(--silver);
+        color: #111;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: .05em;
+      }
+      .desktop-footer b { color: var(--navy); }
+      .desktop-footer a { color: var(--navy); text-decoration: none; }
+      .desktop-footer a:hover { text-decoration: underline; }
+      .footer-divider { width: 1px; height: 12px; background: #808080; }
+      .footer-mark { display: inline-flex; gap: 5px; align-items: center; }
+      .footer-mark svg { width: 19px; height: 19px; flex: 0 0 auto; }
+
+      .character-guide {
+        position: absolute;
+        z-index: 7;
+        top: clamp(98px, 12vh, 118px);
+        left: 50%;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        width: min(440px, calc(100% - 28px));
+        pointer-events: none;
+        transform: translateX(-50%);
+      }
+      .character-bubble {
+        position: relative;
+        display: flex;
+        width: auto;
+        min-width: 0;
+        flex: 1 1 auto;
+        min-height: 72px;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        padding: 16px 21px 14px;
+        overflow: visible;
+        color: #000;
+        filter: drop-shadow(2px 3px 0 rgba(0,0,0,.34));
+      }
+      .character-bubble svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        pointer-events: none;
+      }
+      .character-bubble path {
+        fill: #fffde2;
+        stroke: #414b58;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 3px;
+      }
+      .character-bubble span {
+        position: relative;
+        z-index: 1;
+        max-width: 100%;
+        font-size: clamp(14px, 1.35vw, 17px);
+        font-weight: 700;
+        line-height: 1.18;
+        text-align: center;
+        text-wrap: pretty;
+      }
+      .character {
+        position: relative;
+        flex: 0 0 172px;
+        width: 172px;
+        height: 172px;
+        overflow: hidden;
+        border: 4px solid #fff;
+        border-radius: 50%;
+        outline: 3px solid var(--navy);
+        background: #d4dfe1;
+        box-shadow: 0 0 0 6px rgba(0,0,0,.2), 0 0 18px rgba(255,215,132,.48);
+        transform-origin: 50% 100%;
+        animation: character-float 2.4s ease-in-out infinite;
+      }
+      .character-pose { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
+      .character[data-mood="wave"] { animation-duration: .65s; }
+      .character[data-mood="excited"] { animation-duration: .52s; }
+      .character[data-mood="cheer"] { animation-duration: .5s; }
+      .desktop.is-playing .character-guide { top: clamp(98px, 12vh, 118px); right: auto; bottom: auto; left: 50%; transform: translateX(-50%); }
+
+      @keyframes character-float { 0%,100% { translate: 0 0; } 50% { translate: 0 -4px; } }
+      @keyframes diya-bob { 0%,100% { translate: 0 0; } 50% { translate: 0 -7px; } }
+
+      @media (max-width: 620px) {
+        .desktop { min-height: 500px; }
+        .desktop-header { top: max(11px, env(safe-area-inset-top)); left: 11px; right: 11px; }
+        .desktop-header { top: max(10px, env(safe-area-inset-top)); height: 54px; }
+        .brand { font-size: clamp(30px, 9vw, 42px); }
+        .window { padding: 38px 18px 14px; }
+        .game-window { padding: 43px 12px 13px; }
+        .game-window .titlebar { left: 3px; right: 3px; }
+        #game-canvas { height: clamp(145px, 27svh, 220px); }
+        .game-controls { gap: 6px; flex-wrap: wrap; }
+        .game-help { flex: 1; text-align: center; }
+        .move-button { width: 47px; }
+        .game-action { width: 100%; order: 2; }
+        .rangoli-board { width: min(190px, 68vw, 25svh); }
+        .rangoli-petal { width: 52px; height: 52px; }
+        .dialog-stage { padding: 235px 14px 50px; }
+        .character-guide { top: 76px; left: 14px; right: 14px; width: auto; gap: 11px; transform: none; }
+        .character { flex-basis: 148px; width: 148px; height: 148px; }
+        .character-bubble { min-height: 68px; padding: 15px 16px 13px; }
+        .character-bubble span { font-size: 14px; }
+        .desktop.is-playing .character-guide { top: 76px; right: 14px; bottom: auto; left: 14px; transform: none; }
+        .rangoli { bottom: -29%; width: 135vw; }
+        .fallback-diya { bottom: 14%; }
+        .desktop-footer { min-height: 38px; gap: 5px; font-size: 7px; }
+      }
+
+      @media (max-height: 600px) {
+        .window { padding: 32px 14px 8px; }
+        .stage-icon { width: 32px; height: 32px; margin-bottom: 4px; font-size: 18px; }
+        .eyebrow { margin-bottom: 4px; }
+        h1, h2 { font-size: clamp(21px, 5vw, 25px); }
+        .copy { margin-block: 4px 6px; }
+        fieldset { margin-block: 4px 6px; }
+        .text-field { min-height: 34px; }
+        .gender-option span { min-height: 32px; }
+        .retro-button { min-height: 34px; }
+        .dialog-stage { padding-top: 205px; }
+        .character-guide { top: 76px; }
+        .desktop.is-playing .character-guide { top: 76px; }
+        .character { flex-basis: 120px; width: 120px; height: 120px; border-width: 3px; outline-width: 2px; }
+        .character-bubble { min-height: 62px; padding: 13px 15px 11px; }
+        .character-bubble span { font-size: 13px; }
+        #game-canvas { height: clamp(100px, 17svh, 110px); }
+        .rangoli-board { width: min(150px, 40vw, 25svh); }
+        .game-window { padding: 32px 12px 8px; }
+        .game-heading { margin-bottom: 6px; }
+        .game-controls { gap: 7px; margin-top: 5px; }
+        .move-button, .game-action { min-height: 34px; }
+        .game-feedback { min-height: 14px; margin-top: 3px; }
+        .rangoli-copy { margin-block: 4px 6px; }
+        .rangoli-board { margin-block: 4px 2px; }
+        .rangoli-status { min-height: 15px; margin-top: 3px; }
+        .attempts { margin-bottom: 8px; }
+        .status { min-height: 20px; margin-top: 5px; }
+        .attempt-label { margin-top: 3px; }
+        .hint-box { margin-top: 4px; padding: 6px; }
+        .hint-box p { margin-bottom: 6px; line-height: 1.35; }
+        .hint-actions .retro-button { min-height: 28px; }
+      }
+
+      @media (max-width: 620px) and (max-height: 600px) {
+        .dialog-stage { padding: 200px 14px 45px; }
+        .character-guide { top: 70px; }
+        .desktop.is-playing .character-guide { top: 70px; }
+        .character { flex-basis: 120px; width: 120px; height: 120px; }
+        .rangoli-board { width: min(120px, 34vw, 20svh); }
+      }
+
+      @media (min-width: 621px) and (max-height: 800px) {
+        .rangoli-board { width: 145px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="desktop" id="app">
+      <canvas id="world" aria-hidden="true"></canvas>
+      <div class="world-fallback" id="world-fallback" aria-hidden="true" hidden>
+        <div class="rangoli"></div>
+        <svg class="fallback-diya" viewBox="0 0 100 95" aria-hidden="true">
+          <defs>
+            <linearGradient id="lamp" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#ffe89c"/><stop offset=".45" stop-color="#ee9445"/><stop offset="1" stop-color="#9f4230"/></linearGradient>
+            <radialGradient id="lampGlow"><stop stop-color="#ffe58c" stop-opacity=".85"/><stop offset="1" stop-color="#ffab46" stop-opacity="0"/></radialGradient>
+          </defs>
+          <circle cx="51" cy="40" r="36" fill="url(#lampGlow)"/>
+          <path d="M12 53c3 19 18 29 38 29s35-10 38-29c-10 9-24 13-38 13S22 62 12 53Z" fill="url(#lamp)" stroke="#ffe2a0" stroke-width="2"/>
+          <path d="M13 53c10 7 23 10 37 10s27-3 37-10" fill="none" stroke="#fff1ba" stroke-width="2"/>
+          <path d="M45 51c-10-12-2-26 5-40 2 11 15 18 10 32-2 5-7 8-15 8Z" fill="#ffb238"/>
+          <path d="M49 49c-4-7 0-13 3-20 1 7 7 10 4 17-1 2-4 3-7 3Z" fill="#fff5c3"/>
+        </svg>
+      </div>
+
+      <header class="desktop-header">
+        <div class="brand">DIWALI WISHES</div>
+      </header>
+
+      <section class="dialog-stage" aria-live="polite">
+        <div class="window" id="intro-screen" aria-labelledby="intro-title">
+          <div class="titlebar"><span>WELCOME.EXE</span><span class="window-close" aria-hidden="true">×</span></div>
+          <div class="stage-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3c-1 4-5 6-4 10 .4 1.6 1.7 2.5 4 2.5s3.7-1 4-2.7C21 9 17 7 16 3Z" fill="#ffcf52" stroke="#800000"/><path d="M5 18c2.8 4 7 6 11 6s8.2-2 11-6H5Z" fill="#e78343" stroke="#800000"/><path d="M7 18c4.8 1.6 13.2 1.6 18 0M10 27h12" stroke="#000080"/></svg>
+          </div>
+          <p class="eyebrow">HEY, HAPPY DIWALI!</p>
+          <h1 id="intro-title">Hey there! <em>What should I call you?</em></h1>
+          <p class="copy">Drop your name below and pick male or female. I’ll save a Diwali wish just for you!</p>
+          <form id="intro-form">
+            <label class="field-label" for="player-name">YOUR NAME</label>
+            <input class="text-field" id="player-name" name="name" type="text" maxlength="32" autocomplete="given-name" placeholder="What do your friends call you?" required />
+            <fieldset>
+              <legend>PICK ONE</legend>
+              <div class="gender-options">
+                <label class="gender-option"><input type="radio" name="gender" value="female" required/><span>FEMALE</span></label>
+                <label class="gender-option"><input type="radio" name="gender" value="male" required/><span>MALE</span></label>
+              </div>
+            </fieldset>
+            <button class="retro-button" type="submit"><span>LET’S GO!</span><span>→</span></button>
+          </form>
+        </div>
+
+        <div class="window" id="greeting-screen" aria-labelledby="greeting-title" hidden>
+          <div class="titlebar"><span>DIWALI_GREETING.EXE</span><span class="window-close" aria-hidden="true">×</span></div>
+          <div class="stage-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3v7m0 12v7M3 16h7m12 0h7M6.8 6.8l5 5m8.4 8.4 5 5m0-18.4-5 5m-8.4 8.4-5 5" stroke="#c9972e"/><path d="m16 11 2.2 3.8L22 17l-3.8 2.2L16 23l-2.2-3.8L10 17l3.8-2.2L16 11Z" fill="#ffcf52" stroke="#000080"/></svg>
+          </div>
+          <p class="eyebrow">A LITTLE WISH, JUST FOR YOU</p>
+          <h2 id="greeting-title">Happy Diwali!</h2>
+          <p class="copy" id="greeting-copy"></p>
+          <button class="retro-button" id="greeting-continue" type="button"><span>CONTINUE</span><span>→</span></button>
+        </div>
+
+        <div class="window" id="riddle-screen" aria-labelledby="riddle-title" hidden>
+          <div class="titlebar"><span>JOKE_QUEST.EXE</span><span class="window-close" aria-hidden="true">×</span></div>
+          <div class="stage-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="11" stroke="#000080"/><path d="M12.8 12.5a3.3 3.3 0 1 1 5.7 2.3c-1.6 1.6-2.5 2-2.5 4" stroke="#800000"/><circle cx="16" cy="23" r="1" fill="#800000" stroke="none"/></svg>
+          </div>
+          <p class="eyebrow">QUICK WARM-UP</p>
+          <h2 id="riddle-title">Tell me a joke.</h2>
+          <p class="copy">It’s a little trick question. You’ve got three tries!</p>
+          <div class="attempts" id="attempt-dots" aria-label="3 attempts remaining"><i></i><i></i><i></i></div>
+          <form class="riddle-form" id="answer-form">
+            <label class="field-label" for="answer">YOUR ANSWER</label>
+            <div class="answer-row">
+              <input class="text-field" id="answer" name="answer" type="text" maxlength="100" autocomplete="off" aria-label="Your riddle answer" placeholder="Type your answer" required/>
+              <button class="retro-button" type="submit"><span>TRY</span><span>→</span></button>
+            </div>
+          </form>
+          <div class="hint-box" id="hint-box" hidden>
+            <p id="hint-prompt">Need a hint? Your Diwali guide can help.</p>
+            <div class="hint-actions">
+              <button class="retro-button" id="hint-yes" type="button">YES, GIVE ME A HINT</button>
+              <button class="retro-button" id="hint-no" type="button">NO THANKS</button>
+            </div>
+          </div>
+          <p class="status" id="game-status" role="status" aria-live="polite"></p>
+          <p class="attempt-label" id="attempt-label">3 tries left</p>
+          <button class="retro-button" id="riddle-next" type="button" hidden><span>START THE DIYA DASH</span><span>→</span></button>
+        </div>
+
+        <div class="window game-window" id="play-screen" aria-labelledby="play-title" hidden>
+          <div class="titlebar"><span>DIYA_DASH.EXE</span><span class="window-close" aria-hidden="true">×</span></div>
+          <div class="game-heading">
+            <div>
+              <p class="eyebrow">NOW THE REAL GAME</p>
+              <h2 id="play-title">Catch the glow!</h2>
+              <p class="game-instructions">Move your diya and catch 8 falling lights before time runs out.</p>
+            </div>
+            <div class="game-hud" aria-label="Game score and timer">
+              <div class="hud-chip">GLOWS <span id="orb-score">0</span>/8</div>
+              <div class="hud-chip">TIME <span id="orb-timer">35</span>s</div>
+            </div>
+          </div>
+          <canvas id="game-canvas" aria-label="Diya Dash game arena. Move your diya left and right to catch falling lights." role="img"></canvas>
+          <div class="game-controls">
+            <div class="move-controls">
+              <button class="retro-button move-button" id="move-left" type="button" aria-label="Move diya left">←</button>
+              <button class="retro-button move-button" id="move-right" type="button" aria-label="Move diya right">→</button>
+            </div>
+            <p class="game-help">Use ← → / A D, touch buttons, or drag across the game.</p>
+            <button class="retro-button game-action" id="start-round" type="button"><span>START GAME</span><span>▶</span></button>
+          </div>
+          <p class="game-feedback" id="game-feedback" role="status" aria-live="polite">Ready when you are, <span id="game-player-name"></span>!</p>
+        </div>
+
+        <div class="window memory-window" id="memory-screen" aria-labelledby="memory-title" hidden>
+          <div class="titlebar"><span>RANGOLI_MEMORY.EXE</span><span class="window-close" aria-hidden="true">×</span></div>
+          <div class="stage-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke-width="1.6" stroke-linejoin="round"><path d="M16 4c3 4 4 6 0 10-4-4-3-6 0-10Zm12 12c-4 3-6 4-10 0 4-4 6-3 10 0ZM16 28c-3-4-4-6 0-10 4 4 3 6 0 10ZM4 16c4-3 6-4 10 0-4 4-6 3-10 0Z" fill="#ffcf52" stroke="#000080"/><circle cx="16" cy="16" r="3" fill="#e78343" stroke="#800000"/></svg>
+          </div>
+          <p class="eyebrow">BONUS GAME · SHOW OFF THAT MEMORY</p>
+          <h2 id="memory-title">Rangoli Memory</h2>
+          <p class="rangoli-copy" id="memory-instructions">Watch the petals glow, then repeat their pattern in the same order. Each round adds one light.</p>
+          <div class="rangoli-board" id="rangoli-board" aria-label="Rangoli pattern board">
+            <div class="rangoli-center" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3c-1 4-5 6-4 10 .4 1.6 1.7 2.5 4 2.5s3.7-1 4-2.7C21 9 17 7 16 3Z" fill="#ffcf52" stroke="#800000"/><path d="M5 18c2.8 4 7 6 11 6s8.2-2 11-6H5Z" fill="#e78343" stroke="#800000"/><path d="M7 18c4.8 1.6 13.2 1.6 18 0M10 27h12" stroke="#000080"/></svg></div>
+          </div>
+          <p class="rangoli-status" id="memory-status" role="status" aria-live="polite">Get ready for round 1.</p>
+          <p class="game-feedback" id="memory-feedback" role="status" aria-live="polite"></p>
+          <button class="retro-button" id="memory-start" type="button"><span>START PATTERN GAME</span><span>▶</span></button>
+          <button class="retro-button" id="memory-continue" type="button" hidden><span>VIEW SCORECARD</span><span>→</span></button>
+        </div>
+
+        <div class="window result-window" id="result-screen" aria-labelledby="result-title" hidden>
+          <div class="titlebar"><span>DIWALI_SCORECARD.EXE</span><span class="window-close" aria-hidden="true">×</span></div>
+          <div class="result-fireworks" aria-hidden="true">
+            <span class="firework-burst firework-burst-one"></span>
+            <span class="firework-burst firework-burst-two"></span>
+            <span class="firework-burst firework-burst-three"></span>
+          </div>
+          <div class="stage-icon" id="result-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="#000080" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5h14v5a7 7 0 0 1-14 0V5Z" fill="#ffcf52"/><path d="M9 8H5v2a6 6 0 0 0 6 6m12-8h4v2a6 6 0 0 1-6 6m-5 2v5m-5 3h10m-9-3h8" /></svg>
+          </div>
+          <p class="eyebrow" id="result-kicker">QUEST COMPLETE</p>
+          <h2 id="result-title">Happy Diwali!</h2>
+          <p class="copy" id="result-message"></p>
+          <div class="scorecard" id="scorecard">
+            <span class="scorecard-top">DIWALI WISHES · 2026</span>
+            <strong class="scorecard-name" id="scorecard-name">Happy Diwali!</strong>
+            <strong class="scorecard-points"><span id="score">1000</span><small> POINTS</small></strong>
+            <span class="scorecard-lights" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="scorecard-bottom" id="scorecard-bottom">LIT WITH LOVE BY LIKII</span>
+          </div>
+          <div class="share-actions">
+            <button class="retro-button" id="copy-link" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
+              <span>COPY LINK</span>
+            </button>
+            <button class="retro-button" id="share-link" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.7 6.6-4.4m-6.6 7 6.6 4.4"/></svg>
+              <span>SHARE WISH</span>
+            </button>
+          </div>
+          <p class="share-status" id="share-status" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <aside class="character-guide" aria-label="Your animated Diwali guide">
+        <div class="character" id="character" data-mood="idle">
+          <img class="character-pose" id="character-pose" src="./assets/character/wave_hello.png" alt="Your Diwali guide waving hello" />
+        </div>
+        <div class="character-bubble" id="guide-message" role="status">
+          <svg viewBox="0 0 240 96" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M43 69C36 77 28 82 20 84c4-8 5-14 2-20C12 61 8 53 9 44c1-11 10-19 22-20C34 11 49 6 62 11c11-12 30-12 42-1 13-9 31-5 38 7 16-8 35-1 39 15 16 0 29 10 29 23 1 13-10 23-25 24-9 12-27 13-39 5-13 12-32 12-44 1-13 12-32 10-41-1-12 6-29 1-34-10Z" />
+          </svg>
+          <span id="guide-message-text">Hey! What should I call you?</span>
+        </div>
+      </aside>
+
+      <footer class="desktop-footer">
+        <span>Made by <b>Venkatesh</b></span><span class="footer-divider"></span><span>GitHub <a href="https://github.com/Venkatesh-107" target="_blank" rel="noopener noreferrer">@Venkatesh-107</a></span>
+      </footer>
+    </main>
+
+    <script type="module">
+      const $ = (selector) => document.querySelector(selector);
+      const screens = {
+        INTRO: $("#intro-screen"),
+        GREETING: $("#greeting-screen"),
+        RIDDLE: $("#riddle-screen"),
+        PLAY: $("#play-screen"),
+        MEMORY: $("#memory-screen"),
+        RESULT: $("#result-screen"),
+      };
+      const allowedTransitions = {
+        INTRO: ["GREETING"],
+        GREETING: ["RIDDLE"],
+        RIDDLE: ["PLAY"],
+        PLAY: ["MEMORY"],
+        MEMORY: ["RESULT"],
+        RESULT: [],
+      };
+      const state = {
+        screen: "INTRO",
+        player: { name: "", gender: "" },
+        attempts: 0,
+        hintUsed: false,
+        riddleSolved: false,
+        status: "unanswered",
+        score: 0,
+        memoryRound: 0,
+        memoryScore: 0,
+        memorySequence: [],
+        memoryIndex: 0,
+        memoryInputEnabled: false,
+        memoryTimeouts: [],
+      };
+
+      const app = $("#app");
+      const introForm = $("#intro-form");
+      const answerForm = $("#answer-form");
+      const answerInput = $("#answer");
+      const submitAnswer = answerForm.querySelector('button[type="submit"]');
+      const hintBox = $("#hint-box");
+      const guide = $("#character");
+      const guidePose = $("#character-pose");
+      const guideMessage = $("#guide-message-text");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const playCanvas = $("#game-canvas");
+      const playContext = playCanvas.getContext("2d");
+      const heldDirections = new Set();
+      const orbs = [];
+      const sparkles = Array.from({ length: 42 }, (_, index) => ({
+        x: ((index * 67 + 29) % 997) / 997,
+        y: ((index * 43 + 17) % 613) / 613,
+        size: 1 + (index % 3),
+      }));
+      const skyline = Array.from({ length: 15 }, (_, index) => ({
+        x: index / 15,
+        width: .045 + (index % 3) * .012,
+        height: .11 + ((index * 7) % 13) / 100,
+      }));
+      const game = {
+        active: false,
+        score: 0,
+        timeLeft: 35,
+        playerX: .5,
+        direction: 0,
+        spawnIn: 0,
+        lastFrame: 0,
+        pointerDown: false,
+        pointerX: .5,
+      };
+
+      function transition(next) {
+        if (!allowedTransitions[state.screen].includes(next)) {
+          throw new Error(`Invalid Diwali Quest transition: ${state.screen} → ${next}`);
+        }
+        state.screen = next;
+        for (const [screen, element] of Object.entries(screens)) {
+          element.hidden = screen !== next;
+        }
+        app.dataset.screen = next.toLowerCase();
+        app.classList.toggle("is-playing", next === "PLAY");
+        if (next !== "RIDDLE") hintBox.hidden = true;
+      }
+
+      function speak(message, mood = "idle") {
+        const poses = {
+          idle: "wave_hello",
+          wave: "wave_hello",
+          excited: "celebrate",
+          curious: "point_hint",
+          cheer: "celebrate",
+          thinking: "thinking",
+          sad: "worried_sad",
+          goodbye: "wave_goodbye",
+        };
+        guideMessage.textContent = message;
+        guide.dataset.mood = mood;
+        guidePose.src = `./assets/character/${poses[mood] ?? poses.idle}.png`;
+        guidePose.alt = `Your Diwali guide ${mood === "thinking" ? "thinking" : mood === "curious" ? "offering a hint" : mood === "sad" ? "looking concerned" : mood === "goodbye" ? "waving goodbye" : mood === "excited" || mood === "cheer" ? "celebrating" : "waving"}`;
+        guide.classList.remove("is-speaking");
+        void guide.offsetWidth;
+        guide.classList.add("is-speaking");
+      }
+
+      function updateAttempts() {
+        const remaining = Math.max(0, 3 - state.attempts);
+        $("#attempt-label").textContent = remaining === 1 ? "1 try left" : `${remaining} tries left`;
+        $("#attempt-dots").setAttribute("aria-label", `${remaining} attempts remaining`);
+        $("#attempt-dots").querySelectorAll("i").forEach((dot, index) => {
+          dot.classList.toggle("used", index < state.attempts);
+        });
+      }
+
+      function normalizeGuess(value) {
+        return value.trim().toLowerCase().replace(/[.!?]+$/g, "");
+      }
+
+      function completeRiddle(solved) {
+        state.riddleSolved = solved;
+        const playfulMiss = `Silly ${state.player.gender === "female" ? "girl" : "boy"}, ${state.player.name}! The answer is “joke” — hahaha!`;
+        $("#game-status").textContent = solved
+          ? `Yep, “joke” was the answer! Now let’s get to the real game.`
+          : `${playfulMiss} Now let’s play!`;
+        $("#game-status").className = solved ? "status success" : "status";
+        $("#attempt-label").textContent = solved ? `Solved on try ${state.attempts}` : "Answer revealed";
+        $("#hint-box").hidden = true;
+        answerInput.disabled = true;
+        submitAnswer.disabled = true;
+        $("#riddle-next").hidden = false;
+        speak(
+          solved ? "Nice one! Let’s play!" : `Silly ${state.player.gender === "female" ? "girl" : "boy"}! “Joke” — hahaha!`,
+          "cheer",
+        );
+      }
+
+      function finishGame(won) {
+        if (state.screen !== "PLAY" || !game.active) return;
+        game.active = false;
+        state.status = won ? "won" : "failed";
+        state.score = game.score * 125;
+        $("#memory-start").hidden = false;
+        $("#memory-continue").hidden = true;
+        $("#memory-feedback").textContent = won
+          ? "Eight lights caught! Now try the Rangoli memory bonus."
+          : `You caught ${game.score} lights. See if you can beat the Rangoli pattern!`;
+        $("#memory-status").textContent = "Ready for round 1.";
+        transition("MEMORY");
+        resizeRangoliBoard();
+        speak(
+          won ? "Amazing! Memory time!" : "Lovely playing! Memory time!",
+          won ? "cheer" : "wave",
+        );
+      }
+
+      function submitGuess(event) {
+        event.preventDefault();
+        if (state.screen !== "RIDDLE" || state.riddleSolved || $("#riddle-next").hidden === false) return;
+        const guess = normalizeGuess(answerInput.value);
+        if (!guess) {
+          answerInput.focus();
+          return;
+        }
+
+        state.attempts += 1;
+        answerInput.value = "";
+        updateAttempts();
+        if (guess === "joke") {
+          completeRiddle(true);
+          return;
+        }
+
+        if (state.attempts === 2) {
+          $("#game-status").textContent = "Not quite. Your guide has one hint if you want it.";
+          $("#game-status").className = "status error";
+          hintBox.hidden = false;
+          answerInput.disabled = true;
+          submitAnswer.disabled = true;
+          speak("Need a hint?", "curious");
+          return;
+        }
+
+        if (state.attempts >= 3) {
+          completeRiddle(false);
+          return;
+        }
+
+        $("#game-status").textContent = "Not quite — two tries left. Think about the wording!";
+        $("#game-status").className = "status error";
+        speak("Not quite — 2 tries left.", "wave");
+        answerInput.focus();
+      }
+
+      function chooseHint(wantsHint) {
+        if (state.screen !== "RIDDLE" || state.attempts !== 2) return;
+        hintBox.hidden = true;
+        answerInput.disabled = false;
+        submitAnswer.disabled = false;
+        if (wantsHint) {
+          state.hintUsed = true;
+          $("#game-status").textContent = "Here’s your hint: the answer is the word “joke”.";
+          $("#game-status").className = "status success";
+          speak("Hint: “joke”! One last try.", "excited");
+        } else {
+          $("#game-status").textContent = "No hint! One final try — you’ve got this.";
+          $("#game-status").className = "status";
+          speak("You’ve got this! One last try.", "wave");
+        }
+        answerInput.focus();
+      }
+
+      function resizeGameCanvas() {
+        const bounds = playCanvas.getBoundingClientRect();
+        if (!bounds.width || !bounds.height) return;
+        const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        playCanvas.width = Math.round(bounds.width * pixelRatio);
+        playCanvas.height = Math.round(bounds.height * pixelRatio);
+        playContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+        drawGame();
+      }
+
+      function drawGame() {
+        const { width, height } = playCanvas.getBoundingClientRect();
+        if (!width || !height) return;
+        const ctx = playContext;
+        const sky = ctx.createLinearGradient(0, 0, 0, height);
+        sky.addColorStop(0, "#071d46");
+        sky.addColorStop(.7, "#163b6a");
+        sky.addColorStop(1, "#7b3d58");
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, width, height);
+
+        for (const star of sparkles) {
+          ctx.globalAlpha = .45 + Math.sin(performance.now() / 450 + star.x * 11) * .25;
+          ctx.fillStyle = "#fff2bc";
+          ctx.fillRect(star.x * width, star.y * height * .78, star.size, star.size);
+        }
+        ctx.globalAlpha = 1;
+
+        ctx.fillStyle = "#10294f";
+        skyline.forEach((building, index) => {
+          const x = building.x * width;
+          const buildingWidth = Math.ceil(building.width * width) + 1;
+          const buildingHeight = building.height * height;
+          ctx.fillRect(x, height * .82 - buildingHeight, buildingWidth, buildingHeight);
+          ctx.fillStyle = index % 2 ? "#ffd889" : "#ffb975";
+          for (let row = 0; row < Math.floor(buildingHeight / 13); row += 1) {
+            for (let column = 0; column < 2; column += 1) {
+              if ((index + row + column) % 3 !== 0) {
+                ctx.fillRect(x + 5 + column * 10, height * .82 - buildingHeight + 8 + row * 13, 3, 4);
+              }
+            }
+          }
+          ctx.fillStyle = "#10294f";
+        });
+
+        const ground = ctx.createLinearGradient(0, height * .8, 0, height);
+        ground.addColorStop(0, "#6a3148");
+        ground.addColorStop(1, "#18264d");
+        ctx.fillStyle = ground;
+        ctx.fillRect(0, height * .82, width, height * .18);
+        ctx.strokeStyle = "rgba(255,215,132,.35)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.ellipse(width * .5, height * .93, width * .32, height * .09, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.ellipse(width * .5, height * .93, width * .22, height * .06, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        for (const orb of orbs) {
+          const x = orb.x * width;
+          const y = orb.y * height;
+          const glow = ctx.createRadialGradient(x, y, 1, x, y, 24);
+          glow.addColorStop(0, "rgba(255,246,198,.95)");
+          glow.addColorStop(.24, "rgba(255,190,92,.68)");
+          glow.addColorStop(1, "rgba(255,151,72,0)");
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(x, y, 24, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.rotate(performance.now() / 450 + orb.phase);
+          ctx.fillStyle = "#fff2b0";
+          ctx.shadowColor = "#ffb958";
+          ctx.shadowBlur = 14;
+          ctx.beginPath();
+          for (let point = 0; point < 8; point += 1) {
+            const radius = point % 2 === 0 ? 11 : 4;
+            const angle = point * Math.PI / 4 - Math.PI / 2;
+            const px = Math.cos(angle) * radius;
+            const py = Math.sin(angle) * radius;
+            if (point === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+        }
+
+        const diyaX = game.playerX * width;
+        const diyaY = height * .8;
+        const flameGradient = ctx.createRadialGradient(diyaX, diyaY - 21, 1, diyaX, diyaY - 21, 35);
+        flameGradient.addColorStop(0, "rgba(255,223,135,.62)");
+        flameGradient.addColorStop(1, "rgba(255,183,77,0)");
+        ctx.fillStyle = flameGradient;
+        ctx.beginPath();
+        ctx.arc(diyaX, diyaY - 21, 35, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#ffbd4f";
+        ctx.beginPath();
+        ctx.moveTo(diyaX, diyaY - 9);
+        ctx.bezierCurveTo(diyaX - 11, diyaY - 21, diyaX + 6, diyaY - 32, diyaX + 1, diyaY - 45);
+        ctx.bezierCurveTo(diyaX + 20, diyaY - 28, diyaX + 13, diyaY - 15, diyaX, diyaY - 9);
+        ctx.fill();
+        ctx.fillStyle = "#fff4be";
+        ctx.beginPath();
+        ctx.ellipse(diyaX, diyaY - 15, 4, 10, -.12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#d76c40";
+        ctx.beginPath();
+        ctx.moveTo(diyaX - 31, diyaY);
+        ctx.quadraticCurveTo(diyaX, diyaY + 18, diyaX + 31, diyaY);
+        ctx.quadraticCurveTo(diyaX, diyaY + 8, diyaX - 31, diyaY);
+        ctx.fill();
+        ctx.strokeStyle = "#ffe1a0";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(diyaX - 31, diyaY);
+        ctx.quadraticCurveTo(diyaX, diyaY + 9, diyaX + 31, diyaY);
+        ctx.stroke();
+      }
+
+      function updateGameHud() {
+        const scoreText = String(game.score);
+        const timeText = String(Math.ceil(game.timeLeft));
+        if ($("#orb-score").textContent !== scoreText) $("#orb-score").textContent = scoreText;
+        if ($("#orb-timer").textContent !== timeText) $("#orb-timer").textContent = timeText;
+        $("#orb-timer").style.color = game.timeLeft <= 8 ? "#a00000" : "";
+      }
+
+      function startRound() {
+        if (state.screen !== "PLAY" || game.active) return;
+        game.active = true;
+        game.score = 0;
+        game.timeLeft = 35;
+        game.playerX = .5;
+        game.direction = 0;
+        game.spawnIn = .15;
+        game.lastFrame = 0;
+        orbs.length = 0;
+        heldDirections.clear();
+        $("#start-round").hidden = true;
+        $("#game-feedback").textContent = "Catch the falling lights! Keep moving!";
+        updateGameHud();
+        speak("Catch the lights!", "excited");
+        requestAnimationFrame(runGameFrame);
+      }
+
+      function runGameFrame(timestamp) {
+        if (!game.active) return;
+        const dt = Math.min((timestamp - (game.lastFrame || timestamp)) / 1000, .04);
+        game.lastFrame = timestamp;
+        const width = playCanvas.clientWidth;
+        const held = (heldDirections.has("right") ? 1 : 0) - (heldDirections.has("left") ? 1 : 0);
+        game.direction = held || game.direction;
+        game.playerX = Math.max(.07, Math.min(.93, game.playerX + game.direction * dt * .9));
+        if (game.pointerDown) {
+          game.playerX += (game.pointerX - game.playerX) * Math.min(1, dt * 16);
+        }
+        if (!game.pointerDown && !held) game.direction = 0;
+
+        game.timeLeft = Math.max(0, game.timeLeft - dt);
+        game.spawnIn -= dt;
+        if (game.spawnIn <= 0 && orbs.length < 5) {
+          orbs.push({ x: .08 + Math.random() * .84, y: -.04, speed: .38 + Math.random() * .16, phase: Math.random() * Math.PI });
+          game.spawnIn = Math.max(.42, .78 - game.score * .025);
+        }
+
+        for (let index = orbs.length - 1; index >= 0; index -= 1) {
+          const orb = orbs[index];
+          orb.y += orb.speed * dt;
+          orb.phase += dt * 3;
+          if (orb.y >= .78 && Math.abs(orb.x - game.playerX) < .085) {
+            orbs.splice(index, 1);
+            game.score += 1;
+            updateGameHud();
+            $("#game-feedback").textContent = game.score === 8 ? "All 8 lights caught! Brilliant!" : `${game.score} of 8 caught — keep going!`;
+            if (game.score === 3) speak("3 glows! Keep going!", "excited");
+            if (game.score >= 8) {
+              finishGame(true);
+              return;
+            }
+          } else if (orb.y > .9) {
+            orbs.splice(index, 1);
+          }
+        }
+
+        if (game.timeLeft <= 0) {
+          updateGameHud();
+          finishGame(false);
+          return;
+        }
+        drawGame();
+        updateGameHud();
+        requestAnimationFrame(runGameFrame);
+      }
+
+      function beginPlay() {
+        state.status = "playing";
+        $("#game-player-name").textContent = state.player.name;
+        $("#game-feedback").textContent = `Ready when you are, ${state.player.name}!`;
+        $("#start-round").hidden = false;
+        transition("PLAY");
+        resizeGameCanvas();
+        speak("Catch 8 lights in Diya Dash!", "excited");
+      }
+
+      const rangoliColors = ["#e2672a", "#c9972e", "#7a1f2b", "#2f7d4f", "#3a6ea5", "#8e44ad"];
+      const rangoliBoard = $("#rangoli-board");
+      const rangoliPetals = [];
+      const maxMemoryRounds = 5;
+
+      function resizeRangoliBoard() {
+        const bounds = rangoliBoard.getBoundingClientRect();
+        if (!bounds.width) return;
+        const radius = bounds.width * .35;
+        rangoliPetals.forEach((petal, index) => {
+          const angle = index / rangoliPetals.length * Math.PI * 2 - Math.PI / 2;
+          petal.style.left = `${50 + (Math.cos(angle) * radius / bounds.width) * 100}%`;
+          petal.style.top = `${50 + (Math.sin(angle) * radius / bounds.height) * 100}%`;
+          petal.style.backgroundColor = rangoliColors[index];
+        });
+      }
+
+      function buildRangoliBoard() {
+        if (rangoliPetals.length) return;
+        rangoliColors.forEach((color, index) => {
+          const petal = document.createElement("button");
+          petal.className = "rangoli-petal";
+          petal.type = "button";
+          petal.setAttribute("aria-label", `Rangoli petal ${index + 1}`);
+          petal.style.backgroundColor = color;
+          petal.disabled = true;
+          petal.addEventListener("click", () => tapRangoliPetal(index));
+          rangoliBoard.append(petal);
+          rangoliPetals.push(petal);
+        });
+        resizeRangoliBoard();
+      }
+
+      function setRangoliInputEnabled(enabled) {
+        state.memoryInputEnabled = enabled;
+        rangoliPetals.forEach((petal) => {
+          petal.disabled = !enabled;
+        });
+      }
+
+      function scheduleMemory(callback, delay) {
+        const timeout = window.setTimeout(() => {
+          state.memoryTimeouts = state.memoryTimeouts.filter((timer) => timer !== timeout);
+          callback();
+        }, delay);
+        state.memoryTimeouts.push(timeout);
+      }
+
+      function clearMemoryTimers() {
+        state.memoryTimeouts.forEach(window.clearTimeout);
+        state.memoryTimeouts = [];
+      }
+
+      function lightRangoliPetal(index, isWrong = false) {
+        const petal = rangoliPetals[index];
+        petal.classList.toggle("is-wrong", isWrong);
+        petal.classList.add("is-lit");
+        scheduleMemory(() => {
+          petal.classList.remove("is-lit", "is-wrong");
+        }, isWrong ? 650 : 420);
+      }
+
+      function beginMemoryRound() {
+        state.memoryRound += 1;
+        state.memorySequence.push(Math.floor(Math.random() * rangoliPetals.length));
+        state.memoryIndex = 0;
+        setRangoliInputEnabled(false);
+        $("#memory-status").textContent = `Round ${state.memoryRound} of ${maxMemoryRounds} — watch the pattern.`;
+        $("#memory-instructions").textContent = "Watch the petals glow, then repeat their pattern in the same order.";
+        speak(`Watch closely! Round ${state.memoryRound}.`, "thinking");
+
+        const showStep = (index) => {
+          if (index >= state.memorySequence.length) {
+            scheduleMemory(() => {
+              setRangoliInputEnabled(true);
+              $("#memory-status").textContent = `Your turn — repeat all ${state.memorySequence.length} petals.`;
+              $("#memory-instructions").textContent = "Tap the same petals in the same order.";
+              speak("Your turn! Repeat it.", "wave");
+            }, 500);
+            return;
+          }
+          scheduleMemory(() => {
+            lightRangoliPetal(state.memorySequence[index]);
+            scheduleMemory(() => showStep(index + 1), 360);
+          }, 600);
+        };
+        showStep(0);
+      }
+
+      function startMemoryGame() {
+        if (state.screen !== "MEMORY") return;
+        clearMemoryTimers();
+        buildRangoliBoard();
+        state.memoryRound = 0;
+        state.memoryScore = 0;
+        state.memorySequence = [];
+        setRangoliInputEnabled(false);
+        $("#memory-start").hidden = true;
+        $("#memory-continue").hidden = true;
+        $("#memory-feedback").textContent = "";
+        beginMemoryRound();
+      }
+
+      function finishMemoryGame(message) {
+        clearMemoryTimers();
+        setRangoliInputEnabled(false);
+        state.score += state.memoryScore * 200;
+        $("#memory-status").textContent = `Patterns cleared: ${state.memoryScore} of ${maxMemoryRounds}.`;
+        $("#memory-feedback").textContent = message;
+        $("#memory-continue").hidden = false;
+        speak(state.memoryScore > 0 ? "Pattern power!" : "Nice try!", state.memoryScore > 0 ? "cheer" : "wave");
+      }
+
+      function tapRangoliPetal(index) {
+        if (state.screen !== "MEMORY" || !state.memoryInputEnabled) return;
+        lightRangoliPetal(index);
+        if (index !== state.memorySequence[state.memoryIndex]) {
+          setRangoliInputEnabled(false);
+          lightRangoliPetal(index, true);
+          $("#memory-status").textContent = `Pattern missed — you reached round ${state.memoryRound}.`;
+          speak("Oops! Tricky pattern!", "sad");
+          scheduleMemory(() => finishMemoryGame("Every light counts. Your scorecard is ready!"), 850);
+          return;
+        }
+
+        state.memoryIndex += 1;
+        if (state.memoryIndex < state.memorySequence.length) return;
+        setRangoliInputEnabled(false);
+        state.memoryScore = state.memoryRound;
+        $("#memory-status").textContent = `Pattern matched! Round ${state.memoryRound} cleared.`;
+        if (state.memoryRound >= maxMemoryRounds) {
+          scheduleMemory(() => finishMemoryGame("Five patterns mastered! Amazing memory!"), 650);
+          return;
+        }
+        speak("Matched! One more?", "excited");
+        scheduleMemory(beginMemoryRound, 700);
+      }
+
+      function showScorecard() {
+        if (state.screen !== "MEMORY") return;
+        const won = state.status === "won";
+        $("#result-icon").innerHTML = won
+          ? '<svg viewBox="0 0 32 32" fill="none" stroke="#000080" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5h14v5a7 7 0 0 1-14 0V5Z" fill="#ffcf52"/><path d="M9 8H5v2a6 6 0 0 0 6 6m12-8h4v2a6 6 0 0 1-6 6m-5 2v5m-5 3h10m-9-3h8"/></svg>'
+          : '<svg viewBox="0 0 32 32" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3c-1 4-5 6-4 10 .4 1.6 1.7 2.5 4 2.5s3.7-1 4-2.7C21 9 17 7 16 3Z" fill="#ffcf52" stroke="#800000"/><path d="M5 18c2.8 4 7 6 11 6s8.2-2 11-6H5Z" fill="#e78343" stroke="#800000"/><path d="M7 18c4.8 1.6 13.2 1.6 18 0M10 27h12" stroke="#000080"/></svg>';
+        $("#result-kicker").textContent = won ? "8 GLOWS CAUGHT · QUEST COMPLETE" : "EVERY GLOW COUNTS";
+        $("#result-title").textContent = won ? `You lit up the night, ${state.player.name}!` : `Lovely playing, ${state.player.name}!`;
+        $("#result-message").textContent = `You caught ${game.score} of 8 lights and cleared ${state.memoryScore} Rangoli ${state.memoryScore === 1 ? "pattern" : "patterns"}. Happy Diwali, ${state.player.name}!`;
+        $("#score").textContent = String(state.score);
+        $("#scorecard-name").textContent = `Happy Diwali, ${state.player.name}!`;
+        $("#scorecard-bottom").textContent = `${game.score}/8 GLOWS · ${state.memoryScore}/5 RANGOLI PATTERNS · LIT BY LIKII`;
+        $("#share-status").textContent = "";
+        $("#share-status").className = "share-status";
+        transition("RESULT");
+        speak("Happy Diwali! Scorecard time!", "cheer");
+      }
+
+      $("#riddle-next").addEventListener("click", beginPlay);
+      $("#start-round").addEventListener("click", startRound);
+      $("#memory-start").addEventListener("click", startMemoryGame);
+      $("#memory-continue").addEventListener("click", showScorecard);
+      new ResizeObserver(resizeGameCanvas).observe(playCanvas);
+      new ResizeObserver(resizeRangoliBoard).observe(rangoliBoard);
+
+      $("#move-left").addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        game.direction = -1;
+        heldDirections.add("left");
+      });
+      $("#move-right").addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        game.direction = 1;
+        heldDirections.add("right");
+      });
+      for (const button of [$("#move-left"), $("#move-right")]) {
+        for (const eventName of ["pointerup", "pointercancel", "lostpointercapture"]) {
+          button.addEventListener(eventName, () => {
+            heldDirections.clear();
+            game.direction = 0;
+          });
+        }
+      }
+      window.addEventListener("pointerup", () => {
+        heldDirections.clear();
+        game.direction = 0;
+        game.pointerDown = false;
+      });
+      playCanvas.addEventListener("pointerdown", (event) => {
+        if (!game.active) return;
+        game.pointerDown = true;
+        game.pointerX = event.offsetX / playCanvas.clientWidth;
+        playCanvas.setPointerCapture(event.pointerId);
+      });
+      playCanvas.addEventListener("pointermove", (event) => {
+        if (game.pointerDown) game.pointerX = event.offsetX / playCanvas.clientWidth;
+      });
+      playCanvas.addEventListener("pointerup", () => {
+        game.pointerDown = false;
+      });
+      playCanvas.addEventListener("pointercancel", () => {
+        game.pointerDown = false;
+      });
+      window.addEventListener("keydown", (event) => {
+        if (state.screen !== "PLAY" || !game.active) return;
+        if (event.code === "ArrowLeft" || event.code === "KeyA") {
+          event.preventDefault();
+          heldDirections.add("left");
+        } else if (event.code === "ArrowRight" || event.code === "KeyD") {
+          event.preventDefault();
+          heldDirections.add("right");
+        }
+      });
+      window.addEventListener("keyup", (event) => {
+        if (event.code === "ArrowLeft" || event.code === "KeyA") heldDirections.delete("left");
+        if (event.code === "ArrowRight" || event.code === "KeyD") heldDirections.delete("right");
+        if (!heldDirections.size) game.direction = 0;
+      });
+
+      introForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const data = new FormData(introForm);
+        const name = $("#player-name").value.trim();
+        const gender = data.get("gender");
+        if (!name || (gender !== "female" && gender !== "male")) return;
+        state.player = { name, gender };
+        $("#greeting-title").textContent = `Happy Diwali, ${name}!`;
+        $("#greeting-copy").textContent = `Hope your Diwali is full of bright lights, yummy treats, and happy moments, ${name}!`;
+        transition("GREETING");
+        speak("Happy Diwali!", "wave");
+      });
+
+      $("#greeting-continue").addEventListener("click", () => {
+        state.attempts = 0;
+        state.hintUsed = false;
+        state.riddleSolved = false;
+        state.status = "unanswered";
+        answerForm.reset();
+        answerInput.disabled = false;
+        submitAnswer.disabled = false;
+        $("#game-status").textContent = "";
+        $("#game-status").className = "status";
+        $("#riddle-next").hidden = true;
+        $("#hint-box").hidden = true;
+        updateAttempts();
+        transition("RIDDLE");
+        speak("Ready for a little riddle?", "excited");
+        answerInput.focus();
+      });
+
+      answerForm.addEventListener("submit", submitGuess);
+      $("#hint-yes").addEventListener("click", () => chooseHint(true));
+      $("#hint-no").addEventListener("click", () => chooseHint(false));
+
+      function websiteLink() {
+        return new URL(".", window.location.href).href;
+      }
+
+      async function copyWebsiteLink(successMessage = "Website link copied — send your Diwali wish!") {
+        const url = websiteLink();
+        try {
+          if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(url);
+          } else {
+            const temporaryInput = document.createElement("textarea");
+            temporaryInput.value = url;
+            temporaryInput.setAttribute("readonly", "");
+            temporaryInput.style.position = "fixed";
+            temporaryInput.style.opacity = "0";
+            document.body.append(temporaryInput);
+            temporaryInput.select();
+            const copied = document.execCommand("copy");
+            temporaryInput.remove();
+            if (!copied) throw new Error("The browser denied clipboard access.");
+          }
+          $("#share-status").textContent = successMessage;
+          $("#share-status").className = "share-status";
+        } catch (error) {
+          console.error("Could not copy the Diwali website link.", error);
+          $("#share-status").textContent = "Couldn’t copy the link. Please copy the website address from your browser.";
+          $("#share-status").className = "share-status error";
+        }
+      }
+
+      async function shareWebsiteLink() {
+        const url = websiteLink();
+        if (!navigator.share) {
+          await copyWebsiteLink("Sharing isn’t available here, so the website link was copied instead.");
+          return;
+        }
+        try {
+          await navigator.share({
+            title: "Happy Diwali!",
+            text: `Happy Diwali from ${state.player.name}! Join my Diwali Festival Quest:`,
+            url,
+          });
+          $("#share-status").textContent = "Your Diwali wish is ready to share!";
+          $("#share-status").className = "share-status";
+        } catch (error) {
+          if (error.name === "AbortError") return;
+          console.error("Could not share the Diwali website link.", error);
+          $("#share-status").textContent = "Couldn’t open sharing. Try copying the link instead.";
+          $("#share-status").className = "share-status error";
+        }
+      }
+
+      $("#copy-link").addEventListener("click", () => copyWebsiteLink());
+      $("#share-link").addEventListener("click", shareWebsiteLink);
+
+      const fallback = $("#world-fallback");
+      async function initializeWorld() {
+        let THREE;
+        try {
+          THREE = await import("three");
+        } catch (error) {
+          console.warn("Three.js could not be loaded; showing the decorative Diwali fallback.", error);
+          fallback.hidden = false;
+          $("#world").hidden = true;
+          return;
+        }
+
+        let renderer = null;
+        try {
+          renderer = new THREE.WebGLRenderer({ canvas: $("#world"), alpha: true, antialias: true, powerPreference: "high-performance" });
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+          renderer.outputColorSpace = THREE.SRGBColorSpace;
+          renderer.toneMapping = THREE.ACESFilmicToneMapping;
+          renderer.toneMappingExposure = 1.3;
+        } catch (error) {
+          console.warn("WebGL is unavailable; showing the decorative Diwali fallback.", error);
+          fallback.hidden = false;
+          $("#world").hidden = true;
+        }
+
+        if (renderer) {
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x075564, .035);
+        const camera = new THREE.PerspectiveCamera(36, 1, .1, 60);
+        camera.position.set(0, 3.8, 8.6);
+        camera.lookAt(0, 1, 0);
+
+        scene.add(new THREE.HemisphereLight(0xffe6af, 0x073f49, 2));
+        const key = new THREE.PointLight(0xffc36c, 48, 16, 2);
+        key.position.set(-2, 4, 4);
+        scene.add(key);
+        const warm = new THREE.PointLight(0xff8b40, 35, 9, 2);
+        warm.position.set(0, 1.7, 1);
+        scene.add(warm);
+
+        const stage = new THREE.Group();
+        scene.add(stage);
+        const clay = new THREE.MeshStandardMaterial({ color: 0xa84b2f, roughness: .34, metalness: .25 });
+        const gold = new THREE.MeshStandardMaterial({ color: 0xf3bf66, roughness: .25, metalness: .6, emissive: 0x5d2d0b, emissiveIntensity: .3 });
+        const bowl = new THREE.Mesh(
+          new THREE.LatheGeometry([
+            new THREE.Vector2(0,.1), new THREE.Vector2(.35,.12), new THREE.Vector2(.75,.2),
+            new THREE.Vector2(1.05,.35), new THREE.Vector2(1.18,.44), new THREE.Vector2(1.1,.48),
+            new THREE.Vector2(.76,.29), new THREE.Vector2(.34,.22), new THREE.Vector2(0,.2),
+          ], 88),
+          clay,
+        );
+        bowl.position.y = .12;
+        stage.add(bowl);
+
+        const base = new THREE.Mesh(new THREE.CylinderGeometry(.55,.65,.14,56), gold);
+        base.position.y = .12;
+        stage.add(base);
+
+        const ring = (radius, tube, y, material) => {
+          const mesh = new THREE.Mesh(new THREE.TorusGeometry(radius,tube,8,90),material);
+          mesh.rotation.x = Math.PI/2;
+          mesh.position.y = y;
+          stage.add(mesh);
+        };
+        ring(1.14,.035,.48,gold);
+        ring(2.15,.016,.02,gold);
+        ring(2.4,.01,.025,gold);
+        for (let i=0;i<16;i+=1) {
+          const angle=i*Math.PI/8;
+          const petal=new THREE.Mesh(new THREE.SphereGeometry(1,12,10),gold);
+          petal.scale.set(.09,.025,.27);
+          petal.position.set(Math.cos(angle)*1.78,.025,Math.sin(angle)*1.78);
+          petal.rotation.y=-angle;
+          stage.add(petal);
+          }
+        }
+
+        initializeWorld().catch((error) => {
+          console.error("Could not initialize the Diwali 3D scene.", error);
+          fallback.hidden = false;
+          $("#world").hidden = true;
+        });
+
+        const flameShape = new THREE.Shape();
+        flameShape.moveTo(0,0);
+        flameShape.bezierCurveTo(-.22,.19,-.18,.49,0,.78);
+        flameShape.bezierCurveTo(.23,.52,.25,.22,0,0);
+        const flame = new THREE.Mesh(
+          new THREE.ExtrudeGeometry(flameShape,{depth:.07,bevelEnabled:true,bevelSegments:3,steps:1,bevelSize:.02,bevelThickness:.02}),
+          new THREE.MeshStandardMaterial({color:0xffbd4f,emissive:0xff761e,emissiveIntensity:2.4,roughness:.2}),
+        );
+        flame.position.set(0,.55,.72);
+        flame.geometry.center();
+        stage.add(flame);
+
+        const floor = new THREE.Mesh(
+          new THREE.CircleGeometry(5.2,80),
+          new THREE.MeshStandardMaterial({color:0x075a64,roughness:.55,metalness:.2,emissive:0x03252e,emissiveIntensity:.3}),
+        );
+        floor.rotation.x=-Math.PI/2;
+        floor.position.y=-.09;
+        scene.add(floor);
+
+        const starPositions = new Float32Array(360*3);
+        for(let i=0;i<360;i+=1) {
+          starPositions[i*3]=(Math.random()-.5)*14;
+          starPositions[i*3+1]=Math.random()*7+.5;
+          starPositions[i*3+2]=-Math.random()*9-2;
+        }
+        const starGeometry=new THREE.BufferGeometry();
+        starGeometry.setAttribute("position",new THREE.BufferAttribute(starPositions,3));
+        const stars=new THREE.Points(starGeometry,new THREE.PointsMaterial({color:0xffe8a9,size:.025,transparent:true,opacity:.8}));
+        scene.add(stars);
+
+        const resize=()=>{
+          const width=app.clientWidth;
+          const height=app.clientHeight;
+          if(!width||!height)return;
+          camera.aspect=width/height;
+          camera.updateProjectionMatrix();
+          renderer.setSize(width,height,false);
+        };
+        new ResizeObserver(resize).observe(app);
+        resize();
+        let last=0;
+        const animate=(time)=>{
+          const seconds=time/1000;
+          const dt=Math.min((time-last)/1000||0,.04);
+          last=time;
+          flame.rotation.z=reducedMotion.matches?0:Math.sin(seconds*4.2)*.07;
+          flame.scale.y=reducedMotion.matches?1:1+Math.sin(seconds*8.6)*.04;
+          warm.intensity=30+Math.sin(seconds*9)*3;
+          if(!reducedMotion.matches) {
+            stage.rotation.y+=dt*.04;
+            stars.rotation.y+=dt*.003;
+          }
+          renderer.render(scene,camera);
+          requestAnimationFrame(animate);
+        };
+        requestAnimationFrame(animate);
+      }
+
+      speak("Hey, friend!", "wave");
+      $("#player-name").focus({preventScroll:true});
+    </script>
+  </body>
+</html>
