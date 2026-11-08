@@ -465,6 +465,36 @@
       .firework-burst-two { top: 18%; right: 4%; animation-delay: .9s; filter: hue-rotate(95deg) drop-shadow(0 0 7px rgba(255,195,77,.85)); }
       .firework-burst-three { right: 16%; bottom: 6%; width: 58px; animation-delay: 1.7s; filter: hue-rotate(190deg) drop-shadow(0 0 7px rgba(255,195,77,.85)); }
       .firework-burst-four { top: 53%; left: 38%; width: 52px; animation-delay: 2.2s; filter: hue-rotate(275deg) drop-shadow(0 0 6px rgba(255,195,77,.85)); }
+      .page-celebration {
+        position: absolute;
+        z-index: 2;
+        inset: 0;
+        overflow: hidden;
+        opacity: .94;
+        pointer-events: none;
+      }
+      .page-celebration .firework-burst { width: clamp(60px, 8vw, 104px); }
+      .page-burst-one { top: 24%; left: 2%; animation-delay: .35s; filter: hue-rotate(26deg) drop-shadow(0 0 9px rgba(255,195,77,.95)); }
+      .page-burst-two { top: 35%; right: 2%; animation-delay: 1.25s; filter: hue-rotate(155deg) drop-shadow(0 0 9px rgba(255,195,77,.95)); }
+      .page-celebration .page-burst-three { bottom: 14%; left: 13%; width: clamp(56px, 7vw, 88px); animation-delay: 1.9s; filter: hue-rotate(250deg) drop-shadow(0 0 9px rgba(255,195,77,.95)); }
+      .page-celebration .page-burst-four { right: 13%; bottom: 18%; width: clamp(54px, 6vw, 78px); animation-delay: 2.35s; filter: hue-rotate(85deg) drop-shadow(0 0 9px rgba(255,195,77,.95)); }
+      .page-celebration .page-burst-five { top: 58%; left: 3%; width: clamp(42px, 5vw, 64px); animation-delay: 2.7s; filter: hue-rotate(310deg) drop-shadow(0 0 8px rgba(255,195,77,.9)); }
+      .page-celebration .page-burst-six { top: 52%; right: 4%; width: clamp(44px, 5vw, 68px); animation-delay: .8s; filter: hue-rotate(195deg) drop-shadow(0 0 8px rgba(255,195,77,.9)); }
+      .page-celebration .cracker-trail { height: clamp(52px, 11vh, 104px); }
+      .page-trail-one { bottom: 7%; left: 5%; --launch-angle: -12deg; animation-delay: .1s; }
+      .page-trail-two { right: 6%; bottom: 8%; --launch-angle: 13deg; animation-delay: 1.05s; }
+      .page-celebration .page-trail-three { bottom: 5%; left: 32%; height: clamp(38px, 8vh, 72px); --launch-angle: -8deg; animation-delay: 1.75s; }
+      .page-celebration .page-trail-four { right: 31%; bottom: 6%; height: clamp(42px, 9vh, 82px); --launch-angle: 9deg; animation-delay: 2.2s; }
+      .page-celebration .page-trail-five { bottom: 10%; right: 12%; height: clamp(45px, 10vh, 92px); --launch-angle: 18deg; animation-delay: .7s; }
+      .page-celebration .string-lights {
+        top: 16%;
+        right: 8%;
+        left: 8%;
+        height: clamp(22px, 4vh, 36px);
+        border-color: rgba(255,236,182,.3);
+        opacity: .8;
+      }
+      .page-celebration .string-lights i { top: 7px; width: 6px; height: 8px; }
       .cracker-trail {
         position: absolute;
         bottom: -3px;
@@ -740,6 +770,21 @@
           <path d="M45 51c-10-12-2-26 5-40 2 11 15 18 10 32-2 5-7 8-15 8Z" fill="#ffb238"/>
           <path d="M49 49c-4-7 0-13 3-20 1 7 7 10 4 17-1 2-4 3-7 3Z" fill="#fff5c3"/>
         </svg>
+      </div>
+
+      <div class="page-celebration" aria-hidden="true">
+        <span class="firework-burst page-burst-one"></span>
+        <span class="firework-burst page-burst-two"></span>
+        <span class="firework-burst page-burst-three"></span>
+        <span class="firework-burst page-burst-four"></span>
+        <span class="firework-burst page-burst-five"></span>
+        <span class="firework-burst page-burst-six"></span>
+        <span class="cracker-trail page-trail-one"></span>
+        <span class="cracker-trail page-trail-two"></span>
+        <span class="cracker-trail page-trail-three"></span>
+        <span class="cracker-trail page-trail-four"></span>
+        <span class="cracker-trail page-trail-five"></span>
+        <span class="string-lights"><i></i><i></i><i></i><i></i><i></i></span>
       </div>
 
       <header class="desktop-header">

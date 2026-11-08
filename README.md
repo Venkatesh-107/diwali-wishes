@@ -15,7 +15,7 @@ Visit [Diwali Wishes](https://venkatesh-107.github.io/diwali-wishes/).
 5. Play **Rangoli Memory**: watch the petals light up and repeat the growing sequence. It has six petals and up to five rounds.
 6. View the scorecard, then copy the site link or share the wish using your device’s share menu.
 
-Each caught light is worth 125 points and each cleared memory round is worth 200 points. The scorecard features a glowing night-sky design, animated lights, rising cracker trails, and colorful firework bursts both in the card and around it. Its **Copy link** action copies the current site URL; **Share wish** opens the native sharing menu where available, and copies the link on browsers without native sharing.
+Each caught light is worth 125 points and each cleared memory round is worth 200 points. The whole experience has ambient animated firework bursts, rising cracker trails, and festive string lights around the wishing cards and page. The scorecard adds a glowing night-sky celebration inside and around its panel. Its **Copy link** action copies the current site URL; **Share wish** opens the native sharing menu where available, and copies the link on browsers without native sharing.
 
 ## Run locally
 
