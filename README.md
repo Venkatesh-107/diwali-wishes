@@ -2,6 +2,10 @@
 
 A Diwali greeting with a modern retro-90s interface, 3D diya scene, illustrated character expressions, two festival games, and a shareable scorecard.
 
+## Play online
+
+Visit [Diwali Wishes](https://venkatesh-107.github.io/diwali-wishes/).
+
 ## Player flow
 
 1. Enter a name and choose male or female.
@@ -31,8 +35,4 @@ The footer credits Venkatesh and links to the GitHub profile [@Venkatesh-107](ht
 
 ## Publish with GitHub Pages
 
-1. Push the repository to GitHub.
-2. Open **Settings → Pages**.
-3. Choose **Deploy from a branch**, select the default branch and the `/(root)` folder, then save.
-
-GitHub Pages will publish the game at the URL shown in the Pages settings.
+GitHub Pages is enabled for the `main` branch root. New commits to `main` publish automatically.
